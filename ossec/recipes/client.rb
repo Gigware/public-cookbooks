@@ -34,7 +34,7 @@ node.save
 
 include_recipe "ossec"
 
-ossec_key = data_bag_item("ossec", "ssh")
+#ossec_key = data_bag_item("ossec", "ssh")
 
 user "ossecd" do
   comment "OSSEC Distributor"
@@ -55,7 +55,7 @@ template "#{node['ossec']['user']['dir']}/.ssh/authorized_keys" do
   owner "ossecd"
   group "ossec"
   mode 0600
-  variables(:key => ossec_key['pubkey'])
+  variables(:key => "test")
 end
 
 file "#{node['ossec']['user']['dir']}/etc/client.keys" do
