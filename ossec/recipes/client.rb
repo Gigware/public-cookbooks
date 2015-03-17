@@ -17,6 +17,9 @@
 # limitations under the License.
 #
 
+data_bag_vars = data_bag_item("ossec", "user")
+Chef::Log.info("The email is '#{data_bag_vars['email']}' ")
+
 ossec_server = Array.new
 
 if node.run_list.roles.include?(node['ossec']['server_role'])
@@ -28,7 +31,7 @@ else
 end
 
 node.set['ossec']['user']['install_type'] = "agent"
-#node.set['ossec']['user']['agent_server_ip'] = ossec_server.first
+node.set['ossec']['user']['agent_server_ip'] = data_bag_vars['agent_server_ip']
 
 node.save
 
