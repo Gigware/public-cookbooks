@@ -28,7 +28,7 @@ else
 end
 
 node.set['ossec']['user']['install_type'] = "agent"
-node.set['ossec']['user']['agent_server_ip'] = ossec_server.first
+#node.set['ossec']['user']['agent_server_ip'] = ossec_server.first
 
 node.save
 
