@@ -17,8 +17,26 @@
 # limitations under the License.
 #
 
+require 'net/http'
+require 'json'
+
+#Get databag items set as JSON in berkshelf
 data_bag_vars = data_bag_item("ossec", "user")
-Chef::Log.info("The email is '#{data_bag_vars['email']}' ")
+
+#Get instance ID and set the API full path URL
+uri = URI('http://169.254.169.254/latest/meta-data/instance-id')
+response = Net::HTTP.get(uri)
+@api_uri="#{data_bag_vars['api_endpoint']}/#{response.gsub(/\n/,'')}?field=hidsAgentKey__c&field=hidsStatus__c&field=hidsAssignedAgentName__c&field=instanceId__c&field=hidsagentname__c&field=idsagentid__c"
+
+#Get client key file contents
+#uri = URI.parse(@api_uri)
+uri = URI.parse('https://api.gigware.com/monitoring/master/api/cmdb/ec2/instances/i-34badc3f?field=hidsAgentKey__c&field=hidsStatus__c&field=hidsAssignedAgentName__c&field=instanceId__c&field=hidsagentname__c&field=idsagentid__c')
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+response = http.get(uri.request_uri,{"Accept" => "application/json", "Authorization" => data_bag_vars['auth_token']})
+client_data=JSON.parse(response.body)["attributes"]
+client_key="#{client_data["idsagentid__c"]} #{client_data["hidsagentname__c"]} any #{client_data["hidsagentkey__c"]}"
 
 ossec_server = Array.new
 
@@ -37,8 +55,6 @@ node.save
 
 include_recipe "ossec"
 
-#ossec_key = data_bag_item("ossec", "ssh")
-
 user "ossecd" do
   comment "OSSEC Distributor"
   shell "/bin/bash"
@@ -53,16 +69,23 @@ directory "#{node['ossec']['user']['dir']}/.ssh" do
   mode 0750
 end
 
-template "#{node['ossec']['user']['dir']}/.ssh/authorized_keys" do
-  source "ssh_key.erb"
-  owner "ossecd"
-  group "ossec"
-  mode 0600
-  variables(:key => "test")
-end
+#template "#{node['ossec']['user']['dir']}/.ssh/authorized_keys" do
+#  source "ssh_key.erb"
+#  owner "ossecd"
+#  group "ossec"
+#  mode 0600
+#  variables(:key => "test")
+#end
 
 file "#{node['ossec']['user']['dir']}/etc/client.keys" do
   owner "ossecd"
   group "ossec"
   mode 0660
+  content client_key
+  notifies :restart, "service[ossec]"
+end
+
+service "ossec" do
+  supports :status => true, :restart => true
+  action [:enable, :start]
 end
