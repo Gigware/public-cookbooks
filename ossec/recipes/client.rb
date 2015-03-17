@@ -29,8 +29,7 @@ response = Net::HTTP.get(uri)
 @api_uri="#{data_bag_vars['api_endpoint']}/#{response.gsub(/\n/,'')}?field=hidsAgentKey__c&field=hidsStatus__c&field=hidsAssignedAgentName__c&field=instanceId__c&field=hidsagentname__c&field=idsagentid__c"
 
 #Get client key file contents
-#uri = URI.parse(@api_uri)
-uri = URI.parse('https://api.gigware.com/monitoring/master/api/cmdb/ec2/instances/i-34badc3f?field=hidsAgentKey__c&field=hidsStatus__c&field=hidsAssignedAgentName__c&field=instanceId__c&field=hidsagentname__c&field=idsagentid__c')
+uri = URI.parse(@api_uri)
 http = Net::HTTP.new(uri.host, uri.port)
 http.use_ssl = true
 http.verify_mode = OpenSSL::SSL::VERIFY_NONE
