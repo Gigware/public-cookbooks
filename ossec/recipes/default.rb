@@ -60,7 +60,7 @@ template "#{node['ossec']['user']['dir']}/etc/ossec.conf" do
   group "ossec"
   mode 0440
   variables(:ossec => node['ossec']['user'])
-  notifies :restart, "service[ossec]"
+  #notifies :restart, "service[ossec]"
 end
 
 case node['platform']
@@ -70,9 +70,4 @@ when "arch"
     owner "root"
     mode 0755
   end
-end
-
-service "ossec" do
-  supports :status => true, :restart => true
-  action [:enable, :start]
 end
