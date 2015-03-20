@@ -12,5 +12,5 @@ dont_blame_nrpe=<%= node['nrpe']['dont_blame_nrpe'] %>
 debug=<%= node['nrpe']['debug'] %>
 command_timeout=<%= node['nrpe']['command_timeout'] %>
 <%= "connection_timeout=#{node['nrpe']['connection_timeout']}" unless node['nrpe']['connection_timeout'].nil? %>
-allowed_hosts=<%= @mon_host.join(',') %>
+allowed_hosts=<%= @mon_host %>
 include_dir=<%= @nrpe_directory %>
