@@ -59,13 +59,16 @@ directory include_dir do
   mode '0755'
 end
 
+#Get databag items set as JSON in berkshelf
+data_bag_vars = data_bag_item("agent", "agent_config")
+
 template "#{node['nrpe']['conf_dir']}/nrpe.cfg" do
   source 'nrpe.cfg.erb'
   owner node['nrpe']['user']
   group node['nrpe']['group']
   mode '0644'
   variables(
-    :mon_host => mon_host.uniq.sort,
+    :mon_host => data_bag_vars["agent_server_ip"],
     :nrpe_directory => include_dir
   )
   notifies :restart, "service[#{node['nrpe']['service_name']}]"
