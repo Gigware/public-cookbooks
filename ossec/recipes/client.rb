@@ -24,18 +24,30 @@ require 'json'
 data_bag_vars = data_bag_item("ossec", "user")
 
 #Get instance ID and set the API full path URL
+agent_name=""
 uri = URI('http://169.254.169.254/latest/meta-data/instance-id')
 response = Net::HTTP.get(uri)
-@api_uri="#{data_bag_vars['api_endpoint']}/#{response.gsub(/\n/,'')}?field=hidsAgentKey__c&field=hidsStatus__c&field=hidsAssignedAgentName__c&field=instanceId__c&field=hidsagentname__c&field=idsagentid__c"
+if data_bag_vars['api_endpoint'] != nil
+ @api_uri="#{data_bag_vars['api_endpoint']}/#{response.gsub(/\n/,'')}?field=hidsAgentKey__c&field=hidsStatus__c&field=hidsAssignedAgentName__c&field=instanceId__c&field=hidsagentname__c&field=idsagentid__c"
+else
+ if data_bag_vars['agent_name'] != nil
+  agent_name=data_bag_vars['agent_name']
+ else
+  agent_name=response.gsub(/\n/,'')
+ end
+end
 
 #Get client key file contents
-uri = URI.parse(@api_uri)
-http = Net::HTTP.new(uri.host, uri.port)
-http.use_ssl = true
-http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-response = http.get(uri.request_uri,{"Accept" => "application/json", "Authorization" => data_bag_vars['auth_token']})
-client_data=JSON.parse(response.body)["attributes"]
-client_key="#{client_data["idsagentid__c"]} #{client_data["hidsagentname__c"]} any #{client_data["hidsagentkey__c"]}"
+client_key=nil
+ data_bag_vars['api_endpoint'] != nil
+ uri = URI.parse(@api_uri)
+ http = Net::HTTP.new(uri.host, uri.port)
+ http.use_ssl = true
+ http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+ response = http.get(uri.request_uri,{"Accept" => "application/json", "Authorization" => data_bag_vars['auth_token']})
+ client_data=JSON.parse(response.body)["attributes"]
+ client_key="#{client_data["idsagentid__c"]} #{client_data["hidsagentname__c"]} any #{client_data["hidsagentkey__c"]}"
+end
 
 ossec_server = Array.new
 
@@ -76,12 +88,19 @@ end
 #  variables(:key => "test")
 #end
 
-file "#{node['ossec']['user']['dir']}/etc/client.keys" do
-  owner "ossecd"
-  group "ossec"
-  mode 0660
-  content client_key
-  notifies :restart, "service[ossec]"
+if client_key!=nil
+ file "#{node['ossec']['user']['dir']}/etc/client.keys" do
+   owner "ossecd"
+   group "ossec"
+   mode 0660
+   content client_key
+   notifies :restart, "service[ossec]"
+ end
+else
+ execute "Create agent key using /var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name}" do
+  command "/var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name}"
+  action :run
+ end
 end
 
 service "ossec" do
