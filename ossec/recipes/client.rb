@@ -39,7 +39,7 @@ end
 
 #Get client key file contents
 client_key=nil
- data_bag_vars['api_endpoint'] != nil
+if data_bag_vars['api_endpoint'] != nil
  uri = URI.parse(@api_uri)
  http = Net::HTTP.new(uri.host, uri.port)
  http.use_ssl = true
