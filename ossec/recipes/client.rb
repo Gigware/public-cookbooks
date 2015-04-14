@@ -88,6 +88,18 @@ end
 #  variables(:key => "test")
 #end
 
+#Create the service
+template "/etc/init.d/ossec" do
+  source "ossec_init.erb"
+  owner "root"
+  group "root"
+  mode 0755
+end
+execute "Setup the service" do
+ command "ln -s /etc/init.d/ossec /etc/rc0.d/K20ossec && ln -s /etc/init.d/ossec /etc/rc1.d/K20ossec && ln -s /etc/init.d/ossec /etc/rc2.d/K20ossec && ln -s /etc/init.d/ossec /etc/rc3.d/K20ossec && ln -s /etc/init.d/ossec /etc/rc4.d/K20ossec && ln -s /etc/init.d/ossec /etc/rc5.d/K20ossec && ln -s /etc/init.d/ossec /etc/rc6.d/K20ossec"
+ action :run
+end
+
 if client_key!=nil
  file "#{node['ossec']['user']['dir']}/etc/client.keys" do
    owner "ossecd"

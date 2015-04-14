@@ -15,7 +15,7 @@
 
 <% if @ossec['install_type'] == 'agent' -%>
   <client>
-    <server-ip><%= @ossec['agent_server_ip'] %></server-ip>
+    <server-hostname><%= @ossec['agent_server_ip'] %></server-hostname>
   </client>
 
 <% end -%>
