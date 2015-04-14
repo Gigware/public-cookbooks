@@ -100,6 +100,11 @@ execute "Setup the service" do
  action :run
 end
 
+service "ossec" do
+  supports :status => true, :start => true, :stop => true, :restart => true
+  action :enable
+end
+
 if client_key!=nil
  file "#{node['ossec']['user']['dir']}/etc/client.keys" do
    owner "ossecd"
@@ -111,11 +116,7 @@ if client_key!=nil
 else
  execute "Create agent key using /var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name}" do
   command "/var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name}"
+  notifies :restart, "service[ossec]"
   action :run
  end
-end
-
-service "ossec" do
-  supports :status => true, :restart => true
-  action [:enable, :start]
 end
