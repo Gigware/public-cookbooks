@@ -97,6 +97,7 @@ template "/etc/init.d/ossec" do
 end
 execute "Setup the service" do
  command "ln -s /etc/init.d/ossec /etc/rc0.d/K20ossec && ln -s /etc/init.d/ossec /etc/rc1.d/K20ossec && ln -s /etc/init.d/ossec /etc/rc2.d/K20ossec && ln -s /etc/init.d/ossec /etc/rc3.d/K20ossec && ln -s /etc/init.d/ossec /etc/rc4.d/K20ossec && ln -s /etc/init.d/ossec /etc/rc5.d/K20ossec && ln -s /etc/init.d/ossec /etc/rc6.d/K20ossec"
+ not_if 'test -f /etc/rc0.d/K20ossec'
  action :run
 end
 
