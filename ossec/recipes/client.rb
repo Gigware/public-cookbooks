@@ -117,6 +117,7 @@ if client_key!=nil
 else
  execute "Create agent key using /var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name}" do
   command "/var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name}"
+  not_if "grep #{agent_name} /var/ossec/etc/client.keys 2>/dev/null"
   notifies :restart, "service[ossec]"
   action :run
  end
