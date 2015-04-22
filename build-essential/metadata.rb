@@ -3,6 +3,7 @@ maintainer_email  "cookbooks@opscode.com"
 license           "Apache 2.0"
 description       "Installs C compiler / build tools"
 version           "1.0.2"
+name              "build-essential"
 recipe            "build-essential", "Installs packages required for compiling C software from source."
 
 %w{ fedora redhat centos ubuntu debian amazon }.each do |os|
