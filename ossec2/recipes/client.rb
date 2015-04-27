@@ -44,7 +44,7 @@ node.set['ossec']['user']['agent_server_ip'] = data_bag_vars['agent_server_ip']
 
 node.save unless Chef::Config[:solo]
 
-include_recipe "ossec"
+include_recipe "ossec2"
 
 user "ossecd" do
   comment "OSSEC Distributor"
