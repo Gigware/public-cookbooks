@@ -15,7 +15,7 @@ mkdir -p /var/chef/data_bags/ossec
 echo $SERVER
 
 echo "{ 
-  \"recipes\": [ \"ossec::client\" ]
+  \"recipes\": [ \"ossec2::client\" ]
 }" > /root/ossec_chef.json
 
 [ "$HOSTNAME" = "" ] && echo "{
