@@ -14,7 +14,7 @@ when "linux"
       "default" => ["apt-key adv --fetch-keys http://ossec.wazuh.com/repos/apt/conf/ossec-key.gpg.key", "echo 'deb http://ossec.wazuh.com/repos/apt/debian wheezy main' >> /etc/apt/sources.list", "apt-get update"]
     },
     ["centos", "redhat", "fedora", "amazon"] => {
-      "default" => ["wget -q -O - https://www.atomicorp.com/installers/atomic | sh"]
+      "default" => ["wget -q -O – https://www.atomicorp.com/installers/atomic | sh"]
     }
   )
   install_packs = value_for_platform(
@@ -35,3 +35,85 @@ when "linux"
  end
 
  end
+ 
+#Get databag items set as JSON in berkshelf
+data_bag_vars = data_bag_item("ossec", "user")
+
+#Get instance ID and set the API full path URL
+agent_name=data_bag_vars['agent_name']
+
+#Get client key file contents
+client_key=nil
+
+ossec_server = Array.new
+
+if node.run_list.roles.include?(node['ossec']['server_role'])
+  ossec_server << node['ipaddress']
+end
+
+node.set['ossec']['user']['install_type'] = "agent"
+node.set['ossec']['user']['agent_server_ip'] = data_bag_vars['agent_server_ip']
+
+node.save unless Chef::Config[:solo]
+
+user "ossecd" do
+  comment "OSSEC Distributor"
+  shell "/bin/bash"
+  system true
+  gid "ossec"
+  home node['ossec']['user']['dir']
+end
+
+directory "#{node['ossec']['user']['dir']}/.ssh" do
+  owner "ossecd"
+  group "ossec"
+  mode 0750
+end
+ 
+template "#{node['ossec']['user']['dir']}/bin/ossec-batch-manager.pl" do
+  source "#{Chef::Config[:file_cache_path]}/#{ossec_dir}/contrib/ossec-batch-manager.pl"
+  local true
+  owner "root"
+  group "ossec"
+  mode 0755
+end
+
+template "#{node['ossec']['user']['dir']}/etc/ossec.conf" do
+  source "ossec.conf.erb"
+  owner "root"
+  group "ossec"
+  mode 0440
+  variables(:ossec => node['ossec']['user'])
+  #notifies :restart, "service[ossec]"
+end
+
+case node['platform']
+when "arch"
+  template "/etc/rc.d/ossec" do
+    source "ossec.rc.erb"
+    owner "root"
+    mode 0755
+  end
+end
+
+service "ossec" do
+  supports :status => true, :start => true, :stop => true, :restart => true
+  action :enable
+end
+
+if client_key!=nil
+ file "#{node['ossec']['user']['dir']}/etc/client.keys" do
+   owner "ossecd"
+   group "ossec"
+   mode 0660
+   content client_key
+   notifies :restart, "service[ossec]"
+ end
+else
+ execute "Create agent key using /var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name}" do
+  command "/var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name}"
+  not_if "grep #{agent_name} /var/ossec/etc/client.keys 2>/dev/null"
+  notifies :restart, "service[ossec]"
+  action :run
+ end
+end
