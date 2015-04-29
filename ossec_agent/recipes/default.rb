@@ -70,13 +70,13 @@ directory "#{node['ossec']['user']['dir']}/.ssh" do
   mode 0750
 end
  
-template "#{node['ossec']['user']['dir']}/bin/ossec-batch-manager.pl" do
-  source "#{Chef::Config[:file_cache_path]}/#{ossec_dir}/contrib/ossec-batch-manager.pl"
-  local true
-  owner "root"
-  group "ossec"
-  mode 0755
-end
+#template "#{node['ossec']['user']['dir']}/bin/ossec-batch-manager.pl" do
+#  source "#{Chef::Config[:file_cache_path]}/#{ossec_dir}/contrib/ossec-batch-manager.pl"
+#  local true
+#  owner "root"
+#  group "ossec"
+#  mode 0755
+#end
 
 template "#{node['ossec']['user']['dir']}/etc/ossec.conf" do
   source "ossec.conf.erb"
