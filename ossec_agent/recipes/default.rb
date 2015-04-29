@@ -20,6 +20,10 @@ when "linux"
   install_packs = value_for_platform(
    ["ubuntu", "debian"] => {"default" => ["ossec-hids-agent"]},
    ["centos", "redhat", "fedora", "amazon"] => {"default" => ["ossec-hids-client"]}
+  )  
+  servicesarr = value_for_platform(
+   ["ubuntu", "debian"] => {"default" => ["ossec"]},
+   ["centos", "redhat", "fedora", "amazon"] => {"default" => ["ossec-hids"]}
   )
  
  install_cmds.each do |command|
@@ -96,7 +100,7 @@ when "arch"
   end
 end
 
-service "ossec-hids" do
+service "#{servicesarr[0]}" do
   supports :status => true, :start => true, :stop => true, :restart => true
   action :enable
 end
@@ -107,13 +111,13 @@ if client_key!=nil
    group "ossec"
    mode 0660
    content client_key
-   notifies :restart, "service[ossec-hids]"
+   notifies :restart, "service[#{servicesarr[0]}]"
  end
 else
  execute "Create agent key using /var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name}" do
   command "/var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name}"
   not_if "grep #{agent_name} /var/ossec/etc/client.keys 2>/dev/null"
-  notifies :restart, "service[ossec-hids]"
+  notifies :restart, "service[#{servicesarr[0]}]"
   action :run
  end
 end
