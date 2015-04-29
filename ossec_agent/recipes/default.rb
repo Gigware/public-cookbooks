@@ -21,7 +21,6 @@ when "linux"
    ["ubuntu", "debian"] => {"default" => ["ossec-hids-agent"]},
    ["centos", "redhat", "fedora", "amazon"] => {"default" => ["ossec-hids-client"]}
   )
- end
  
  install_cmds.each do |command|
   execute "#{command}" do
@@ -34,5 +33,5 @@ when "linux"
    action :install
   end
  end
- 
-end
+
+ end
