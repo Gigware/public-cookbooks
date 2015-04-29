@@ -4,6 +4,7 @@ SERVER=$1
 HOSTNAME=$2
 
 [ "$SERVER" = "" ] && echo "Usage: $0 ServerName AgentName(optional)" && exit 1
+[ "$HOSTNAME" = "" ] && echo "Usage: $0 ServerName AgentName(optional)" && exit 1
 
 [ ! -f /usr/bin/chef-solo ] && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 11.18.6 && rm install.sh
 
