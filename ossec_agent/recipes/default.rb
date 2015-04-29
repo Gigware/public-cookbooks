@@ -14,7 +14,7 @@ when "linux"
       "default" => ["apt-key adv --fetch-keys http://ossec.wazuh.com/repos/apt/conf/ossec-key.gpg.key", "echo 'deb http://ossec.wazuh.com/repos/apt/debian wheezy main' >> /etc/apt/sources.list", "apt-get update"]
     },
     ["centos", "redhat", "fedora", "amazon"] => {
-      "default" => ["wget -q -O – https://www.atomicorp.com/installers/atomic | sh"]
+      "default" => ["wget -q -O - https://www.atomicorp.com/installers/atomic | sh"]
     }
   )
   install_packs = value_for_platform(
