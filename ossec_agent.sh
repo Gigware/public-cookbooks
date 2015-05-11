@@ -8,8 +8,8 @@ HOSTNAME=$2
 
 [ ! -f /usr/bin/chef-solo ] && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 11.18.6 && rm install.sh
 
-[ -f /usr/bin/aptitude ] && aptitude -y install git
-[ -f /usr/bin/yum ] && yum -y install git
+[ -f /usr/bin/aptitude ] && aptitude -y install git libssl-dev
+[ -f /usr/bin/yum ] && yum -y install git openssl-devel
 
 mkdir -p /var/chef/data_bags/ossec
 
