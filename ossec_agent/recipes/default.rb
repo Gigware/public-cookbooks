@@ -103,9 +103,13 @@ service "#{servicesarr[0]}" do
 end
 
 if node['platform'] == "debian"
- execute "Create agent key using /var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name} && /etc/init.d/ossec restart" do
+ execute "Create agent key using /var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name}" do
   command "/var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name}"
   not_if "grep #{agent_name} /var/ossec/etc/client.keys 2>/dev/null"
+  action :run
+ end
+ execute "/etc/init.d/ossec restart" do
+  command "/etc/init.d/ossec restart"
   action :run
  end
 else
