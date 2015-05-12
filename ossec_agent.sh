@@ -10,9 +10,6 @@ HOSTNAME=$2
  [ "$HOSTNAME" = "" ] && HOSTNAME=`hostname`
 }
 
-echo $HOSTNAME
-exit 1
-
 [ ! -f /usr/bin/chef-solo ] && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 11.18.6 && rm install.sh
 
 [ -f /usr/bin/aptitude ] && aptitude -y install git libssl-dev
