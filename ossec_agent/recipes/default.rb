@@ -100,7 +100,7 @@ when "arch"
   end
 end
 
-puts(node['os'])
+puts(node['platform'])
 exit(1)
 
 service "#{servicesarr[0]}" do
