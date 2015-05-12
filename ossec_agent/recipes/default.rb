@@ -100,6 +100,9 @@ when "arch"
   end
 end
 
+puts(node['os'])
+exit(1)
+
 service "#{servicesarr[0]}" do
   supports :status => true, :start => true, :stop => true, :restart => true
   action :enable
