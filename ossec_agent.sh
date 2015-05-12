@@ -10,10 +10,10 @@ HOSTNAME=$2
  [ "$HOSTNAME" = "" ] && HOSTNAME=`hostname`
 }
 
-[ ! -f /usr/bin/chef-solo ] && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 11.18.6 && rm install.sh
+[ -f /usr/bin/aptitude ] && aptitude -y install git libssl-dev wget
+[ -f /usr/bin/yum ] && yum -y install git openssl-devel wget
 
-[ -f /usr/bin/aptitude ] && aptitude -y install git libssl-dev
-[ -f /usr/bin/yum ] && yum -y install git openssl-devel
+[ ! -f /usr/bin/chef-solo ] && curl -LO https://www.chef.io/chef/install.sh && sudo bash ./install.sh -v 11.18.6 && rm install.sh
 
 mkdir -p /var/chef/data_bags/ossec
 
