@@ -46,9 +46,6 @@ data_bag_vars = data_bag_item("ossec", "user")
 #Get instance ID and set the API full path URL
 agent_name=data_bag_vars['agent_name']
 
-#Get client key file contents
-client_key=nil
-
 ossec_server = Array.new
 
 if node.run_list.roles.include?(node['ossec']['server_role'])
@@ -100,21 +97,16 @@ when "arch"
   end
 end
 
-puts(node['platform'])
-exit(1)
-
 service "#{servicesarr[0]}" do
   supports :status => true, :start => true, :stop => true, :restart => true
   action :enable
 end
 
-if client_key!=nil
- file "#{node['ossec']['user']['dir']}/etc/client.keys" do
-   owner "ossecd"
-   group "ossec"
-   mode 0660
-   content client_key
-   notifies :restart, "service[#{servicesarr[0]}]"
+if node['platform'] == "debian"
+ execute "Create agent key using /var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name} && /etc/init.d/ossec restart" do
+  command "/var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name}"
+  not_if "grep #{agent_name} /var/ossec/etc/client.keys 2>/dev/null"
+  action :run
  end
 else
  execute "Create agent key using /var/ossec/bin/agent-auth -m #{data_bag_vars['agent_server_ip']} -A #{agent_name}" do
