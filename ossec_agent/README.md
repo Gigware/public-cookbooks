@@ -8,4 +8,4 @@
     chmod +x /root/ossec_agent.sh && /root/ossec_agent.sh SERVER_NAME AGENT_NAME
 
 
-where SERVER_NAME is the name of the actual server and AGENT_NAME of the agent.
+where SERVER_NAME is the name of the actual server and AGENT_NAME of the agent. If no AGENT_NAME specified, the instance ID will be used as agent name, otherwise the hostname.
