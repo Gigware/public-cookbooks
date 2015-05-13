@@ -42,9 +42,6 @@ end
 
  end
 
-puts(node['platform_version'])
-puts(node['platform'])
-
 if node['platform'] == "amazon"
  template "/etc/yum.repos.d/atomic.repo" do
   source "atomic.repo.erb"
