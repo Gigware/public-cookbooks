@@ -13,13 +13,13 @@ when "linux"
 	  "6.0" => ["apt-key adv --fetch-keys http://ossec.wazuh.com/repos/apt/conf/ossec-key.gpg.key", "echo 'deb http://ossec.wazuh.com/repos/apt/debian sid main' >> /etc/apt/sources.list", "apt-get update"],
       "default" => ["apt-key adv --fetch-keys http://ossec.wazuh.com/repos/apt/conf/ossec-key.gpg.key", "echo 'deb http://ossec.wazuh.com/repos/apt/debian wheezy main' >> /etc/apt/sources.list", "apt-get update"]
     },
-    ["centos", "redhat", "fedora", "amazon"] => {
+    ["centos", "redhat", "fedora"] => {
       "default" => ["wget -q -O - https://www.atomicorp.com/installers/atomic | sh"]
     }
   )
   install_packs = value_for_platform(
    ["ubuntu", "debian"] => {"default" => ["ossec-hids-agent"]},
-   ["centos", "redhat", "fedora", "amazon"] => {"default" => ["ossec-hids-client"]}
+   ["centos", "redhat", "fedora"] => {"default" => ["ossec-hids-client"]}
   )  
   servicesarr = value_for_platform(
    ["ubuntu", "debian"] => {"default" => ["ossec"]},
@@ -39,6 +39,22 @@ when "linux"
  end
 
  end
+ 
+if node['platform'] == "amazon"
+ template "/etc/yum.repos.d/atomic.repo" do
+  source "atomic.repo.erb"
+  owner "root"
+  group "root"
+  mode 0755
+ end
+ execute "Create key for repo" do
+  command "wget -q --no-check-certificate https://www.atomicorp.com/RPM-GPG-KEY.art.txt 1>/dev/null 2>&1 && rpm -import RPM-GPG-KEY.art.txt >/dev/null 2>&1 && rm -f RPM-GPG-KEY.art.txt"
+  not_if "test -f /etc/pki/rpm-gpg/RPM-GPG-KEY.art.txt"
+  cwd "/root"
+  action :run
+ end
+ package "ossec-hids-client"
+end
  
 #Get databag items set as JSON in berkshelf
 data_bag_vars = data_bag_item("ossec", "user")
@@ -70,14 +86,6 @@ directory "#{node['ossec']['user']['dir']}/.ssh" do
   group "ossec"
   mode 0750
 end
- 
-#template "#{node['ossec']['user']['dir']}/bin/ossec-batch-manager.pl" do
-#  source "#{Chef::Config[:file_cache_path]}/#{ossec_dir}/contrib/ossec-batch-manager.pl"
-#  local true
-#  owner "root"
-#  group "ossec"
-#  mode 0755
-#end
 
 template "#{node['ossec']['user']['dir']}/etc/ossec.conf" do
   source "ossec.conf.erb"
