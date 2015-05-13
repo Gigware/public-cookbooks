@@ -25,7 +25,8 @@ when "linux"
    ["ubuntu", "debian"] => {"default" => ["ossec"]},
    ["centos", "redhat", "fedora", "amazon"] => {"default" => ["ossec-hids"]}
   )
- 
+
+if node['platform'] != "amazon"
  install_cmds.each do |command|
   execute "#{command}" do
    not_if { ::File.exists?("/var/ossec/etc/ossec.conf")}
@@ -37,6 +38,7 @@ when "linux"
    action :install
   end
  end
+end
 
  end
 
