@@ -31,7 +31,7 @@ when "linux"
 if node['platform'] != "amazon"
  install_cmds.each do |command|
   execute "#{command}" do
-   not_if { ::File.exists?("/var/ossec/etc/ossec.conf")}
+   not_if "test -f /var/ossec/etc/ossec.conf"
   end
  end
 
