@@ -45,7 +45,7 @@ end
 
 def set_config()
  @config_lines.push("echo 'agent_server_ip=#{@options[:server_name]}' | sudo tee --append /etc/ossec_config.conf > /dev/null")
- if @options[:agent_name] != nil 
+ if @options[:agent_name] != nil
   @config_lines.push("echo 'agent_name=#{@options[:agent_name]}' | sudo tee --append /etc/ossec_config.conf > /dev/null")
  end
 end
