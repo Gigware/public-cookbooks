@@ -3,11 +3,19 @@
 
 2. Create a role named ossec_agent containing this cookbook, this can be done easily using the chef web interface under the roles section(Under Policy -> Roles push Create and assign the cookbook)
 
-    cd /root && wget --no-check-certificate https://raw.githubusercontent.com/Gigware/public-cookbooks/master/ossec_agent.sh
+3. Use the ```https://github.com/Gigware/public-cookbooks/blob/master/chefize_ossec.rb``` script to chefize the server with ossec agent using this script(required to install the net-ssh gem like ```gem install net-ssh```. Script usage is:
 
-2. Run the script using:
 
-    chmod +x /root/ossec_agent.sh && /root/ossec_agent.sh SERVER_NAME AGENT_NAME
+Usage: ./chefize_ossec.rb [options]
+        --ossec-server-name hostname The hostname of the ossec server to be used
+        --agent-name agent           The name of the agent to be used
+        --agent-server-ip ip/hostname
+                                     The IP or hostname of the server where ossec agent should be installed
+        --private-key /path/to/key   The path to the private key to be used
+        --ssh-user user              The username to be used on the server to be chefized
+        --help                       Show Help
+
+
 
 
 where SERVER_NAME is the name of the actual server and AGENT_NAME of the agent. If no AGENT_NAME specified, the instance ID will be used as agent name, otherwise the hostname.
