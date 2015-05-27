@@ -1,4 +1,4 @@
-1. Download script https://github.com/Gigware/public-cookbooks/blob/master/ossec_agent.sh to your server like to /root/ossec_agent.sh. You can do this by running:
+1. Install this cookbook on your chef server using ```knife cookbook install ossec_agent_server```
 
 
     cd /root && wget --no-check-certificate https://raw.githubusercontent.com/Gigware/public-cookbooks/master/ossec_agent.sh
