@@ -9,6 +9,6 @@
 ```knife data bag from file ossec ossec.json```</br>
 ```rm -f ossec.json```</br>
 
-Where ServerName is the actual hostname of the server.
+Where ServerName is the actual hostname of the server
 
-4. Add the ossec_agent role to the nodes that need ossec installed.
+4\. Add the ossec_agent role to the nodes that need ossec installed.
