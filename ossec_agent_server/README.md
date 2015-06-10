@@ -21,7 +21,7 @@ Create a role named ossec_agent containing this cookbook, this can be done easil
 
 Create a databag that will contain the server hostname using the next commands:</br>
 ```knife data bag create ossec```</br>
-```echo "{\"id\":\"user\", \"agent_server_ip\":\"ServerName\"}" > ossec.json```</br>
+```echo "{\"id\":\"user\", \"agent_server_hostname\":\"ServerName\"}" > ossec.json```</br>
 ```knife data bag from file ossec ossec.json```</br>
 ```rm -f ossec.json```</br>
 
