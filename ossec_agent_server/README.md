@@ -10,3 +10,5 @@
 ```rm -f ossec.json```</br>
 
 Where ServerName is the actual hostname of the server.
+
+4. Add the ossec_agent role to the nodes that need ossec installed.
