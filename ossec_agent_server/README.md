@@ -13,8 +13,9 @@
 
 Run ```knife cookbook install ossec_agent_server``` after putting the whole ossec_agent_server cookbook directory into the /var/chef/cookbooks directory.
 
+### Create roles
 
-2\. Create a role named ossec_agent containing this cookbook, this can be done easily using the chef web interface under the roles section(Under Policy -> Roles push Create and assign the cookbook)
+Create a role named ossec_agent containing this cookbook, this can be done easily using the chef web interface under the roles section(Under Policy -> Roles push Create and assign the cookbook)
 
 3\. Create a databag that will contain the server hostname using the next commands:</br>
 ```knife data bag create ossec```</br>
