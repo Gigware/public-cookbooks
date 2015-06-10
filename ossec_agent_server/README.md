@@ -9,7 +9,9 @@
 - Red Hat Enterprise Linux 6
 - Amazon Linux 2015.03
 
-1\. Install this cookbook on your chef server using ```knife cookbook install ossec_agent_server``` after putting it into the /var/chef/cookbooks directory.
+### Install the cookbook on your chef server
+
+Run ```knife cookbook install ossec_agent_server``` after putting it into the /var/chef/cookbooks directory.
 
 
 2\. Create a role named ossec_agent containing this cookbook, this can be done easily using the chef web interface under the roles section(Under Policy -> Roles push Create and assign the cookbook)
