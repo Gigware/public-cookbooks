@@ -124,13 +124,13 @@ end
 
 node.set['ossec']['user']['install_type'] = "agent"
 if data_bag_vars != nil
- node.set['ossec']['user']['agent_server_ip'] = data_bag_vars['agent_server_ip']
- @server_ip = data_bag_vars['agent_server_ip']
+ node.set['ossec']['user']['agent_server_hostname'] = data_bag_vars['agent_server_hostname']
+ @server_ip = data_bag_vars['agent_server_hostname']
 end
 
 if @server_ip == nil
- node.set['ossec']['user']['agent_server_ip']=@config_data['agent_server_ip']
- @server_ip=@config_data['agent_server_ip']
+ node.set['ossec']['user']['agent_server_hostname']=@config_data['agent_server_hostname']
+ @server_ip=@config_data['agent_server_hostname']
 end
 if @server_ip == nil
  puts("Error - agent server IP not specified neither in the databag nor in a config file")
