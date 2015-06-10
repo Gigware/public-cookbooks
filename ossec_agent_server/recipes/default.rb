@@ -38,6 +38,7 @@ if node['platform'] != "amazon"
  install_packs.each do |pkg|
   package pkg do
    action :install
+   options "--nogpgcheck"
   end
  end
 end
