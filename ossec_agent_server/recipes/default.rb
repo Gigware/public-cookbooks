@@ -28,7 +28,7 @@ when "linux"
    ["centos", "redhat", "fedora", "amazon"] => {"default" => ["ossec-hids"]}
   )
 
-if node['platform'] != "amazon"
+if node['platform'] != "amazon" and node['platform'] != "debian" and node['platform'] != "ubuntu"
  install_cmds.each do |command|
   execute "#{command}" do
    not_if "test -f /var/ossec/etc/ossec.conf"
@@ -39,6 +39,20 @@ if node['platform'] != "amazon"
   package pkg do
    action :install
    options "--nogpgcheck"
+  end
+ end
+end
+
+if node['platform'] == "debian" or node['platform'] == "ubuntu"
+ install_cmds.each do |command|
+  execute "#{command}" do
+   not_if "test -f /var/ossec/etc/ossec.conf"
+  end
+ end
+
+ install_packs.each do |pkg|
+  package pkg do
+   action :install
   end
  end
 end
