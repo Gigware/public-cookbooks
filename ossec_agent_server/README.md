@@ -30,7 +30,7 @@ Where ```ServerName``` is the actual hostname of the server
 ### Add role to nodes 
 
 Add the ossec_agent role to the nodes that need ossec installed using the chef web interface. To do this take the following steps:</br>
-1. Go to ```Nodes```
-2. Select the node
-3. Under ```Run List``` press Edit
-4. Add the ```ossec_agent``` role to the Current Run List from Available Roles
+1. Go to ```Nodes```</br>
+2. Select the node</br>
+3. Under ```Run List``` press Edit</br>
+4. Add the ```ossec_agent``` role to the Current Run List from Available Roles</br>
