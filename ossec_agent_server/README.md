@@ -1,3 +1,14 @@
+### Supported operating systems:
+- Debian 7 (wheezy)
+- Debian 8 (jessie)
+- Ubuntu 12.04 (precise)
+- Ubuntu 14.04 (trysty)
+- Centos 5
+- Centos 6
+- Red Hat Enterprise Linux 5
+- Red Hat Enterprise Linux 6
+- Amazon Linux 2015.03
+
 1\. Install this cookbook on your chef server using ```knife cookbook install ossec_agent_server``` after putting it into the /var/chef/cookbooks directory.
 
 
