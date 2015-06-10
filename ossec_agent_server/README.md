@@ -34,3 +34,4 @@ Add the ossec_agent role to the nodes that need ossec installed using the chef w
 2. Select the node</br>
 3. Under ```Run List``` press Edit</br>
 4. Add the ```ossec_agent``` role to the Current Run List from Available Roles</br>
+5. Press ```Save Run List```
